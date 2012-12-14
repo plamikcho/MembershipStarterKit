@@ -10,7 +10,7 @@ using SampleWebsite.Mvc3.Areas.MvcMembership.Models.UserAdministration;
 
 namespace SampleWebsite.Mvc3.Areas.MvcMembership.Controllers
 {
-	[AuthorizeUnlessOnlyUser(Roles = "Administrator")] // allows access if you're the only user, only validates role if role provider is enabled
+	[AuthorizeUnlessOnlyUserSimpleMembership(Roles = "Administrator")] // allows access if you're the only user, only validates role if role provider is enabled
 	public class UserAdministrationController : Controller
 	{
 		private const int PageSize = 10;
@@ -23,11 +23,11 @@ namespace SampleWebsite.Mvc3.Areas.MvcMembership.Controllers
 		private readonly IPasswordService _passwordService;
 
 		public UserAdministrationController()
-			: this(new AspNetMembershipProviderWrapper(), new AspNetRoleProviderWrapper(), new SmtpClientProxy())
+			: this(new AspNetSimpleMembershipProviderWrapper(), new AspNetRoleProviderWrapper(), new SmtpClientProxy())
 		{
 		}
 
-		public UserAdministrationController(AspNetMembershipProviderWrapper membership, IRolesService roles, ISmtpClient smtp)
+        public UserAdministrationController(AspNetSimpleMembershipProviderWrapper membership, IRolesService roles, ISmtpClient smtp)
 			: this(membership.Settings, membership, membership, roles, smtp)
 		{
 		}
@@ -96,7 +96,7 @@ namespace SampleWebsite.Mvc3.Areas.MvcMembership.Controllers
 							});
 		}
 
-		public ViewResult Details(Guid id)
+		public ViewResult Details(object id)
 		{
 			var user = _userService.Get(id);
 			var userRoles = _rolesService.Enabled
@@ -122,7 +122,7 @@ namespace SampleWebsite.Mvc3.Areas.MvcMembership.Controllers
 							});
 		}
 
-		public ViewResult Password(Guid id)
+		public ViewResult Password(object id)
 		{
 			var user = _userService.Get(id);
 			var userRoles = _rolesService.Enabled
@@ -148,7 +148,7 @@ namespace SampleWebsite.Mvc3.Areas.MvcMembership.Controllers
 			});
 		}
 
-		public ViewResult UsersRoles(Guid id)
+		public ViewResult UsersRoles(object id)
 		{
 			var user = _userService.Get(id);
 			var userRoles = _rolesService.FindByUser(user);
@@ -215,7 +215,7 @@ namespace SampleWebsite.Mvc3.Areas.MvcMembership.Controllers
 		}
 
 		[AcceptVerbs(HttpVerbs.Post)]
-		public RedirectToRouteResult Details(Guid id, string email, string comments)
+		public RedirectToRouteResult Details(object id, string email, string comments)
 		{
 			var user = _userService.Get(id);
 			user.Email = email;
@@ -225,7 +225,7 @@ namespace SampleWebsite.Mvc3.Areas.MvcMembership.Controllers
 		}
 
 		[AcceptVerbs(HttpVerbs.Post)]
-		public RedirectToRouteResult DeleteUser(Guid id)
+		public RedirectToRouteResult DeleteUser(object id)
 		{
 			var user = _userService.Get(id);
 
@@ -236,7 +236,7 @@ namespace SampleWebsite.Mvc3.Areas.MvcMembership.Controllers
 		}
 
 		[AcceptVerbs(HttpVerbs.Post)]
-		public RedirectToRouteResult ChangeApproval(Guid id, bool isApproved)
+		public RedirectToRouteResult ChangeApproval(object id, bool isApproved)
 		{
 			var user = _userService.Get(id);
 			user.IsApproved = isApproved;
@@ -245,14 +245,14 @@ namespace SampleWebsite.Mvc3.Areas.MvcMembership.Controllers
 		}
 
 		[AcceptVerbs(HttpVerbs.Post)]
-		public RedirectToRouteResult Unlock(Guid id)
+		public RedirectToRouteResult Unlock(object id)
 		{
 			_passwordService.Unlock(_userService.Get(id));
 			return RedirectToAction("Details", new { id });
 		}
 
 		[AcceptVerbs(HttpVerbs.Post)]
-		public RedirectToRouteResult ResetPassword(Guid id)
+		public RedirectToRouteResult ResetPassword(object id)
 		{
 			var user = _userService.Get(id);
 			var newPassword = _passwordService.ResetPassword(user);
@@ -268,7 +268,7 @@ namespace SampleWebsite.Mvc3.Areas.MvcMembership.Controllers
 		}
 
 		[AcceptVerbs(HttpVerbs.Post)]
-		public RedirectToRouteResult ResetPasswordWithAnswer(Guid id, string answer)
+		public RedirectToRouteResult ResetPasswordWithAnswer(object id, string answer)
 		{
 			var user = _userService.Get(id);
 			var newPassword = _passwordService.ResetPassword(user, answer);
@@ -284,7 +284,7 @@ namespace SampleWebsite.Mvc3.Areas.MvcMembership.Controllers
 		}
 
 		[AcceptVerbs(HttpVerbs.Post)]
-		public RedirectToRouteResult SetPassword(Guid id, string password)
+		public RedirectToRouteResult SetPassword(object id, string password)
 		{
 			var user = _userService.Get(id);
 			_passwordService.ChangePassword(user, password);
@@ -300,14 +300,14 @@ namespace SampleWebsite.Mvc3.Areas.MvcMembership.Controllers
 		}
 
 		[AcceptVerbs(HttpVerbs.Post)]
-		public RedirectToRouteResult AddToRole(Guid id, string role)
+		public RedirectToRouteResult AddToRole(object id, string role)
 		{
 			_rolesService.AddToRole(_userService.Get(id), role);
 			return RedirectToAction("UsersRoles", new { id });
 		}
 
 		[AcceptVerbs(HttpVerbs.Post)]
-		public RedirectToRouteResult RemoveFromRole(Guid id, string role)
+		public RedirectToRouteResult RemoveFromRole(object id, string role)
 		{
 			_rolesService.RemoveFromRole(_userService.Get(id), role);
 			return RedirectToAction("UsersRoles", new { id });

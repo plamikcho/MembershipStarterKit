@@ -42,7 +42,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Debug\MvcMembership.XML</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -55,15 +56,23 @@
     <DocumentationFile>bin\Release\MvcMembership.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.0.0-alpha2\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.0.0-alpha2\lib\net40\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="PagedList">
       <HintPath>..\packages\PagedList.1.15.0.0\lib\net40\PagedList.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
@@ -71,17 +80,35 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Xml" />
+    <Reference Include="WebActivator">
+      <HintPath>..\packages\WebActivator.1.3.2\lib\NETFramework40\WebActivator.dll</HintPath>
+    </Reference>
+    <Reference Include="WebMatrix.WebData, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\SimpleMembership.Mvc3.1.2\lib\Net40\WebMatrix.WebData.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\SimpleMembershipMvc3.cs" />
     <Compile Include="AspNetMembershipProviderUserServiceFactory.cs" />
     <Compile Include="AspNetMembershipProviderWrapper.cs" />
     <Compile Include="AspNetRoleProviderWrapper.cs" />
+    <Compile Include="SimpleMembershipSupport\AspNetSimpleMembershipProviderUserServiceFactory.cs" />
+    <Compile Include="SimpleMembershipSupport\AspNetSimpleMembershipProviderWrapper.cs" />
     <Compile Include="AuthorizeUnlessOnlyUserAttribute.cs" />
     <Compile Include="IPasswordService.cs" />
     <Compile Include="IRolesService.cs" />
     <Compile Include="IUserService.cs" />
     <Compile Include="ISmtpClient.cs" />
     <Compile Include="IUserServiceFactory.cs" />
+    <Compile Include="Services\IWebSecurityService.cs" />
+    <Compile Include="Services\WebSecurityService.cs" />
+    <Compile Include="SimpleMembershipSupport\AuthorizeUnlessOnlyUserSimpleMembershipAttribute.cs" />
+    <Compile Include="SimpleMembershipSupport\ISimpleMembershipRepository.cs" />
+    <Compile Include="SimpleMembershipSupport\MembershipExtensions.cs" />
+    <Compile Include="SimpleMembershipSupport\SimpleMembershipContext.cs" />
+    <Compile Include="SimpleMembershipSupport\SimpleMembershipRepository.cs" />
+    <Compile Include="SimpleMembershipSupport\SimpleMembershipUser.cs" />
     <Compile Include="SmtpClientProxy.cs" />
     <Compile Include="Settings\ILoginSettings.cs" />
     <Compile Include="Settings\IMembershipSettings.cs" />
@@ -115,6 +142,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
